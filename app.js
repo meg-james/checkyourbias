@@ -1,6 +1,6 @@
 const video = document.querySelector("video");
 const filter =
-    Math.random() < 0.5 ? "rgba(255, 0, 0, 0.4)" : "rgba(0, 200, 255, 0.4)";
+    Math.random() < 0.5 ? "rgba(255, 0, 0, 0.5)" : "rgba(0, 200, 255, 0.5)";
 
 navigator.mediaDevices
     .getUserMedia({ video: { facingMode: "environment" } })

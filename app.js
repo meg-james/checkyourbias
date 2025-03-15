@@ -2,10 +2,16 @@ const video = document.querySelector("video");
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-canvas.style.width = `${window.innerWidth}px`;
-canvas.style.height = `${window.innerHeight}px`;
+function resizeCanvas() {
+    canvas.width = document.documentElement.clientWidth;
+    canvas.height = document.documentElement.clientHeight;
+    canvas.style.width = `${document.documentElement.clientWidth}px`;
+    canvas.style.height = `${document.documentElement.clientHeight}px`;
+}
+
+// Resize canvas on load and when window resizes
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();  // Initial call
 
 const lastFilter = localStorage.getItem("filterColor");
 let filter = lastFilter === "rgba(255, 0, 0, 0.75)" ? "rgba(0, 200, 255, 0.8)" : "rgba(255, 0, 0, 0.75)";

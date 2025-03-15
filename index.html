@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="styles.css" />
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@600&display=swap');
+            
             body {
                 margin: 0;
                 overflow: hidden;
@@ -15,6 +16,7 @@
             video {
                 position: absolute;
                 visibility: hidden;
+                object-fit: cover;
             }
 
             canvas {
@@ -25,30 +27,33 @@
                 height: 100vh;
             }
 
-            .question{
+            .question {
                 font-family: 'Atkinson Hyperlegible Mono', sans-serif;
                 text-align: center;
-                vertical-align: middle;
-                line-height: 40px;
-                color:white;
+                line-height: 1.5;
+                color: white;
                 font-size: 20px;
-                margin-left: 10px;    
-                position:relative;           
-            }
-            a:link {
-              color: rgb(0,200,255);
-            }
-            
-            a:visited {
-              color: rgb(0,200,255);
-             }
-        
-            a:hover {
-              color: red;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                white-space: nowrap;
+                padding: 5px 10px;
+                border-radius: 5px;
             }
 
+            a {
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+            a:link,
+            a:visited {
+                color: rgb(0, 200, 255);
+            }
+
+            a:hover,
             a:active {
-              color: red;
+                color: red;
             }
         </style>
     </head>
@@ -57,9 +62,9 @@
         <canvas></canvas>
         <script src="app.js"></script>
         <div class="question">
-            <p> 
-                <a href="https://www.allsides.com/media-bias/media-bias-chart" style="text-decoration: none;" >WHAT'S YOUR BIAS?</a> 
+            <p>
+                <a href="https://www.allsides.com/media-bias/media-bias-chart">WHAT'S YOUR BIAS?</a>
             </p>
-       </div>
+        </div>
     </body>
 </html>

@@ -6,10 +6,10 @@
         <title>Digital Glasses</title>
         <link rel="stylesheet" href="styles.css" />
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
             body {
                 margin: 0;
                 overflow: hidden;
-                <p› <a href="https://www.allsides.com/media-bias/media-bias-chart">What is your bias?</a></p>
             }
 
             video {
@@ -24,11 +24,24 @@
                 width: 100vw;
                 height: 100vh;
             }
+
+            .question{
+                font-family: 'JetBrains Mono', sans-serif;
+                text-align: center;
+                color:white;
+                font-size: 30px;
+                margin-left: 10px;   
+                background-color: transparent;  
+                position:relative;           
+            }
         </style>
     </head>
     <body>
         <video autoplay playsinline muted></video>
         <canvas></canvas>
         <script src="app.js"></script>
+        <div class="question">
+            <p> <a"https://www.allsides.com/media-bias/media-bias-chart"><u>WHAT'S YOUR BIAS?</u></a> </p>
+       </div>
     </body>
 </html>

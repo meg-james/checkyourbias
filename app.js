@@ -44,14 +44,6 @@ function draw() {
 
     requestAnimationFrame(draw);
 }
-const video = document.querySelector("video");
-const canvas = document.querySelector("canvas");
-const context = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-canvas.style.width = `${window.innerWidth}px`;
-canvas.style.height = `${window.innerHeight}px`;
 
 const lastFilter = localStorage.getItem("filterColor");
 let filter = lastFilter === "rgba(255, 0, 0, 0.75)" ? "rgba(0, 200, 255, 0.8)" : "rgba(255, 0, 0, 0.75)";

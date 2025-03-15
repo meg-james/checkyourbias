@@ -5,8 +5,6 @@ const context = canvas.getContext("2d");
 function resizeCanvas() {
     canvas.width = document.documentElement.clientWidth;
     canvas.height = document.documentElement.clientHeight;
-    canvas.style.width = `${document.documentElement.clientWidth}px`;
-    canvas.style.height = `${document.documentElement.clientHeight}px`;
 }
 
 // Resize canvas on load and when window resizes
@@ -60,19 +58,26 @@ function draw() {
         const canvasRatio = canvas.width / canvas.height;
         const videoRatio = video.videoWidth / video.videoHeight;
 
+        let drawWidth, drawHeight, offsetX, offsetY;
+
+        // Scale the video to completely fill the canvas (crop excess)
         if (videoRatio > canvasRatio) {
-            const height = canvas.width / videoRatio;
-            const y = (canvas.height - height) / 2;
-            context.drawImage(video, 0, y, canvas.width, height);
-            context.fillStyle = filter;
-            context.fillRect(0, y, canvas.width, height);
+            // Video is wider than canvas, crop width
+            drawHeight = canvas.height;
+            drawWidth = video.videoWidth * (canvas.height / video.videoHeight);
+            offsetX = (canvas.width - drawWidth) / 2;
+            offsetY = 0;
         } else {
-            const width = canvas.height * videoRatio;
-            const x = (canvas.width - width) / 2;
-            context.drawImage(video, x, 0, width, canvas.height);
-            context.fillStyle = filter;
-            context.fillRect(x, 0, width, canvas.height);
+            // Video is taller than canvas, crop height
+            drawWidth = canvas.width;
+            drawHeight = video.videoHeight * (canvas.width / video.videoWidth);
+            offsetX = 0;
+            offsetY = (canvas.height - drawHeight) / 2;
         }
+
+        context.drawImage(video, offsetX, offsetY, drawWidth, drawHeight);
+        context.fillStyle = filter;
+        context.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     requestAnimationFrame(draw);

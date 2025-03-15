@@ -9,16 +9,13 @@ canvas.style.height = `${window.innerHeight}px`;
 
 const lastFilter = localStorage.getItem("filterColor");
 let filter = lastFilter === "rgba(255, 0, 0, 0.75)" ? "rgba(0, 200, 255, 0.8)" : "rgba(255, 0, 0, 0.75)";
-
 localStorage.setItem("filterColor", filter);
 
 function updateLinkColor() {
     const link = document.querySelector("a"); 
-
     if (!link) return; 
 
     const isRedFilter = filter === "rgba(255, 0, 0, 0.75)";
-    
     link.style.color = isRedFilter ? "rgb(0, 200, 255)" : "rgb(255, 0, 0)";
 
     link.addEventListener("mousedown", () => {
@@ -30,16 +27,24 @@ function updateLinkColor() {
     });
 }
 
+async function startCamera() {
+    try {
+        const constraints = {
+            video: {
+                facingMode: { ideal: "environment" }, // Prefer rear camera but fallback if unavailable
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            }
+        };
 
-navigator.mediaDevices
-    .getUserMedia({ video: { facingMode: "environment" } })
-    .then((stream) => {
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
         video.srcObject = stream;
+        video.setAttribute("playsinline", true); // Important for iOS
         video.play();
-    })
-    .catch((error) => {
+    } catch (error) {
         console.error("Error accessing the camera: ", error);
-    });
+    }
+}
 
 function draw() {
     if (video.readyState >= 2) { 
@@ -67,5 +72,9 @@ function draw() {
     requestAnimationFrame(draw);
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+    updateLinkColor();
+    startCamera();
+});
+
 video.addEventListener("play", draw);
-document.addEventListener("DOMContentLoaded", updateLinkColor);

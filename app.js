@@ -1,49 +1,22 @@
 const video = document.querySelector("video");
-const canvas = document.querySelector("canvas");
-const context = canvas.getContext("2d");
-
-// Adjust canvas size for mobile
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-canvas.style.width = "100%";
-canvas.style.height = "100%";
+const filter =
+    Math.random() < 0.5 ? "rgba(255, 0, 0, 0.5)" : "rgba(0, 0, 255, 0.5)";
 
 navigator.mediaDevices
-    .getUserMedia({
-        video: {
-            facingMode: "environment", // Use the rear camera on mobile
-            width: { ideal: 1280 }, // Ideal width for mobile
-            height: { ideal: 720 }, // Ideal height for mobile
-        }
-    })
+    .getUserMedia({ video: { facingMode: "environment" } })
     .then((stream) => {
         video.srcObject = stream;
         video.play();
-        draw(); // Start the drawing function after the video starts
     })
     .catch((error) => {
         console.error("Error accessing the camera: ", error);
     });
 
-function draw() {
-    context.fillStyle = "black";
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    const canvasRatio = canvas.width / canvas.height;
-    const videoRatio = video.videoWidth / video.videoHeight;
-
-    if (videoRatio > canvasRatio) {
-        const height = canvas.width / videoRatio;
-        const y = (canvas.height - height) / 2;
-        context.drawImage(video, 0, y, canvas.width, height);
-    } else {
-        const width = canvas.height * videoRatio;
-        const x = (canvas.width - width) / 2;
-        context.drawImage(video, x, 0, width, canvas.height);
-    }
-
-    requestAnimationFrame(draw);
-}
+const canvas = document.querySelector("canvas");
+const context = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.style.height = window.innerHeight;
+canvas.height = window.innerHeight;
 
 const lastFilter = localStorage.getItem("filterColor");
 let filter = lastFilter === "rgba(255, 0, 0, 0.75)" ? "rgba(0, 200, 255, 0.8)" : "rgba(255, 0, 0, 0.75)";
@@ -51,9 +24,9 @@ let filter = lastFilter === "rgba(255, 0, 0, 0.75)" ? "rgba(0, 200, 255, 0.8)" :
 localStorage.setItem("filterColor", filter);
 
 function updateLinkColor() {
-    const link = document.querySelector("a"); // Ensure the link exists
+    const link = document.querySelector("a");
 
-    if (!link) return; // Exit if no link is found
+    if (!link) return;
 
     const isRedFilter = filter === "rgba(255, 0, 0, 0.75)";
     
@@ -68,38 +41,25 @@ function updateLinkColor() {
     });
 }
 
-
-navigator.mediaDevices
-    .getUserMedia({ video: { facingMode: "environment" } })
-    .then((stream) => {
-        video.srcObject = stream;
-        video.play();
-    })
-    .catch((error) => {
-        console.error("Error accessing the camera: ", error);
-    });
-
 function draw() {
-    if (video.readyState >= 2) { 
-        context.fillStyle = "black";
-        context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "black";
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
-        const canvasRatio = canvas.width / canvas.height;
-        const videoRatio = video.videoWidth / video.videoHeight;
+    const canvasRatio = canvas.width / canvas.height;
+    const videoRatio = video.videoWidth / video.videoHeight;
 
-        if (videoRatio > canvasRatio) {
-            const height = canvas.width / videoRatio;
-            const y = (canvas.height - height) / 2;
-            context.drawImage(video, 0, y, canvas.width, height);
-            context.fillStyle = filter;
-            context.fillRect(0, y, canvas.width, height);
-        } else {
-            const width = canvas.height * videoRatio;
-            const x = (canvas.width - width) / 2;
-            context.drawImage(video, x, 0, width, canvas.height);
-            context.fillStyle = filter;
-            context.fillRect(x, 0, width, canvas.height);
-        }
+    if (videoRatio > canvasRatio) {
+        const height = canvas.width / videoRatio;
+        const y = (canvas.height - height) / 2;
+        context.drawImage(video, 0, y, canvas.width, height);
+        context.fillStyle = filter;
+        context.fillRect(0, y, canvas.width, height);
+    } else {
+        const width = canvas.height * videoRatio;
+        const x = (canvas.width - width) / 2;
+        context.drawImage(video, x, 0, width, canvas.height);
+        context.fillStyle = filter;
+        context.fillRect(x, 0, width, canvas.height);
     }
 
     requestAnimationFrame(draw);

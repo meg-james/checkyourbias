@@ -2,6 +2,52 @@ const video = document.querySelector("video");
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 
+// Adjust canvas size for mobile
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+canvas.style.width = "100%";
+canvas.style.height = "100%";
+
+navigator.mediaDevices
+    .getUserMedia({
+        video: {
+            facingMode: "environment", // Use the rear camera on mobile
+            width: { ideal: 1280 }, // Ideal width for mobile
+            height: { ideal: 720 }, // Ideal height for mobile
+        }
+    })
+    .then((stream) => {
+        video.srcObject = stream;
+        video.play();
+        draw(); // Start the drawing function after the video starts
+    })
+    .catch((error) => {
+        console.error("Error accessing the camera: ", error);
+    });
+
+function draw() {
+    context.fillStyle = "black";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    const canvasRatio = canvas.width / canvas.height;
+    const videoRatio = video.videoWidth / video.videoHeight;
+
+    if (videoRatio > canvasRatio) {
+        const height = canvas.width / videoRatio;
+        const y = (canvas.height - height) / 2;
+        context.drawImage(video, 0, y, canvas.width, height);
+    } else {
+        const width = canvas.height * videoRatio;
+        const x = (canvas.width - width) / 2;
+        context.drawImage(video, x, 0, width, canvas.height);
+    }
+
+    requestAnimationFrame(draw);
+}
+const video = document.querySelector("video");
+const canvas = document.querySelector("canvas");
+const context = canvas.getContext("2d");
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 canvas.style.width = `${window.innerWidth}px`;

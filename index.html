@@ -29,16 +29,41 @@
 
             .question {
                 font-family: 'JetBrains Mono', sans-serif;
-                text-align: center;
+                text-align: right;
                 line-height: 1.5;
                 font-size: 20px;
                 position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
+                right: 10%;
+                /*transform: translateX(-50%);*/
                 white-space: nowrap;
                 padding: 5px 10px;
                 border-radius: 5px;
             }
+
+            .title {
+                font-family: 'JetBrains Mono', sans-serif;
+                text-align: left;
+                line-height: 1.5;
+                font-size: 50px;
+                position: absolute;
+                left: 10%;
+                /*transform: translateX(-50%);*/
+                white-space: nowrap;
+                padding: 5px 10px;
+                border-radius: 5px;
+            }
+
+            .eye {
+            aspect-ratio: 1;
+            height: 20vh;
+            position: absolute;
+            bottom: 10vh;
+            right: 10vh;
+            background-image: url(images/eye.png);
+            background-size: contain;
+            background-repeat: no-repeat;
+            pointer-events: all;
+}
 
             a {
                 text-decoration: none;
@@ -60,10 +85,16 @@
         <video autoplay playsinline muted></video>
         <canvas></canvas>
         <script src="app.js"></script>
-        <div class="question">
+        <div class="title">
             <p>
-                <a href="https://www.allsides.com/media-bias/media-bias-chart"><u>CHECK YOUR BIAS</u></a>
+                CHECK YOUR BIAS
             </p>
         </div>
+        <div class="question">
+            <p>
+                LEARN MORE ON <a href="https://www.allsides.com/media-bias/media-bias-chart"><u>ALLSIDES.COM</u></a>
+            </p>
+        </div>
+        <div class="eye"></div>
     </body>
 </html>

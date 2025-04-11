@@ -31,13 +31,7 @@ async function startCamera() {
 
 function draw() {
     if (video.readyState >= 2) {
-        // Apply red filter to the top half
-        context.fillStyle = "rgba(255, 0, 0, 0.75)";
-        context.fillRect(0, 0, canvas.width, canvas.height / 2);
-
-        // Apply blue filter to the bottom half
-        context.fillStyle = "rgba(0, 200, 255, 0.8)";
-        context.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
         const canvasRatio = canvas.width / canvas.height;
         const videoRatio = video.videoWidth / video.videoHeight;
@@ -46,18 +40,25 @@ function draw() {
 
         if (videoRatio > canvasRatio) {
             drawHeight = canvas.height;
-            drawWidth = video.videoWidth * (canvas.height / video.videoHeight);
+            drawWidth = videoRatio * canvas.height;
             offsetX = (canvas.width - drawWidth) / 2;
             offsetY = 0;
         } else {
             drawWidth = canvas.width;
-            drawHeight = video.videoHeight * (canvas.width / video.videoWidth);
+            drawHeight = canvas.width / videoRatio;
             offsetX = 0;
             offsetY = (canvas.height - drawHeight) / 2;
         }
 
-        // Draw the video to the canvas
+        // Draw the video first
         context.drawImage(video, offsetX, offsetY, drawWidth, drawHeight);
+
+        // Then overlay the filters
+        context.fillStyle = "rgba(255, 0, 0, 0.25)";
+        context.fillRect(0, 0, canvas.width, canvas.height / 2);
+
+        context.fillStyle = "rgba(0, 200, 255, 0.25)";
+        context.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
     }
 
     requestAnimationFrame(draw);

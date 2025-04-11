@@ -3,8 +3,9 @@ const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 
 function resizeCanvas() {
-    canvas.width = document.documentElement.clientWidth;
-    canvas.height = document.documentElement.clientHeight;
+    // Match canvas resolution exactly to the screen
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 }
 
 window.addEventListener("resize", resizeCanvas);
@@ -22,7 +23,7 @@ async function startCamera() {
 
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         video.srcObject = stream;
-        video.setAttribute("playsinline", true);
+        video.setAttribute("playsinline", true); // for iOS
         video.play();
     } catch (error) {
         console.error("Error accessing the camera: ", error);
@@ -33,30 +34,34 @@ function draw() {
     if (video.readyState >= 2) {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        const canvasRatio = canvas.width / canvas.height;
-        const videoRatio = video.videoWidth / video.videoHeight;
+        const canvasAspect = canvas.width / canvas.height;
+        const videoAspect = video.videoWidth / video.videoHeight;
 
-        let drawWidth, drawHeight, offsetX, offsetY;
+        let drawWidth = canvas.width;
+        let drawHeight = canvas.height;
+        let offsetX = 0;
+        let offsetY = 0;
 
-        if (videoRatio > canvasRatio) {
+        if (videoAspect > canvasAspect) {
+            // Video is wider than canvas
             drawHeight = canvas.height;
-            drawWidth = videoRatio * canvas.height;
+            drawWidth = video.videoWidth * (canvas.height / video.videoHeight);
             offsetX = (canvas.width - drawWidth) / 2;
-            offsetY = 0;
         } else {
+            // Video is taller than canvas
             drawWidth = canvas.width;
-            drawHeight = canvas.width / videoRatio;
-            offsetX = 0;
+            drawHeight = video.videoHeight * (canvas.width / video.videoWidth);
             offsetY = (canvas.height - drawHeight) / 2;
         }
 
-        // Draw the video first
+        // Draw video to fill canvas area
         context.drawImage(video, offsetX, offsetY, drawWidth, drawHeight);
 
-        // Then overlay the filters
+        // Apply red filter to top half
         context.fillStyle = "rgba(255, 0, 0, 0.25)";
         context.fillRect(0, 0, canvas.width, canvas.height / 2);
 
+        // Apply blue filter to bottom half
         context.fillStyle = "rgba(0, 200, 255, 0.25)";
         context.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
     }

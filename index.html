@@ -1,93 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>CHECK YOUR BIAS</title>
-        <link rel="stylesheet" href="styles.css" />
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap');
-            
-            body {
-                margin: 0;
-                overflow: hidden;
-                color: rgb(0, 200, 255);
-            }
+const video = document.querySelector("video");
+const canvas = document.querySelector("canvas");
+const context = canvas.getContext("2d");
 
-            video {
-                position: absolute;
-                visibility: hidden;
-                object-fit: cover;
-            }
+function resizeCanvas() {
+    canvas.width = document.documentElement.clientWidth;
+    canvas.height = document.documentElement.clientHeight;
+}
 
-            canvas {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-            }
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
 
-            .question {
-                font-family: 'JetBrains Mono', sans-serif;
-                text-align: right;
-                line-height: 1.5;
-                font-size: 20px;
-                position: absolute;
-                right: 10%;
-                /*transform: translateX(-50%);*/
-                white-space: nowrap;
-                padding: 5px 10px;
-                border-radius: 5px;
+async function startCamera() {
+    try {
+        const constraints = {
+            video: {
+                facingMode: { ideal: "environment" },
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
             }
+        };
 
-            .title {
-                font-family: 'JetBrains Mono', sans-serif;
-                text-align: left;
-                line-height: 1.5;
-                font-size: 50px;
-                position: absolute;
-                left: 10%;
-                /*transform: translateX(-50%);*/
-                white-space: nowrap;
-                padding: 5px 10px;
-                border-radius: 5px;
-            }
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = stream;
+        video.setAttribute("playsinline", true);
+        video.play();
+    } catch (error) {
+        console.error("Error accessing the camera: ", error);
+    }
+}
 
-            .eye {
-            aspect-ratio: 1;
-            height: 20vh;
-            position: absolute;
-            bottom: 10vh;
-            right: 10vh;
-            background-image: url(images/eye.png);
-            background-size: contain;
-            background-repeat: no-repeat;
-            pointer-events: all;
-            }
+function draw() {
+    if (video.readyState >= 2) {
+        // Apply red filter to the top half
+        context.fillStyle = "rgba(255, 0, 0, 0.75)";
+        context.fillRect(0, 0, canvas.width, canvas.height / 2);
 
-            a {
-                text-decoration: none;
-                transition: color 0.3s ease;
-            }
+        // Apply blue filter to the bottom half
+        context.fillStyle = "rgba(0, 200, 255, 0.8)";
+        context.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
 
-            
-        </style>
-    </head>
-    <body>
-        <video autoplay playsinline muted></video>
-        <canvas></canvas>
-        <script src="app.js"></script>
-        <div class="title">
-            <p>
-                CHECK YOUR BIAS
-            </p>
-        </div>
-        <div class="question">
-            <p>
-                LEARN MORE ON <a href="https://www.allsides.com/media-bias/media-bias-chart"><u>ALLSIDES.COM</u></a>
-            </p>
-        </div>
-        <div class="eye"></div>
-    </body>
-</html>
+        const canvasRatio = canvas.width / canvas.height;
+        const videoRatio = video.videoWidth / video.videoHeight;
+
+        let drawWidth, drawHeight, offsetX, offsetY;
+
+        if (videoRatio > canvasRatio) {
+            drawHeight = canvas.height;
+            drawWidth = video.videoWidth * (canvas.height / video.videoHeight);
+            offsetX = (canvas.width - drawWidth) / 2;
+            offsetY = 0;
+        } else {
+            drawWidth = canvas.width;
+            drawHeight = video.videoHeight * (canvas.width / video.videoWidth);
+            offsetX = 0;
+            offsetY = (canvas.height - drawHeight) / 2;
+        }
+
+        // Draw the video to the canvas
+        context.drawImage(video, offsetX, offsetY, drawWidth, drawHeight);
+    }
+
+    requestAnimationFrame(draw);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    startCamera();
+});
+
+video.addEventListener("play", draw);

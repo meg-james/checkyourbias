@@ -8,33 +8,13 @@ function resizeCanvas() {
 }
 
 window.addEventListener("resize", resizeCanvas);
-resizeCanvas();  
-
-//const lastFilter = localStorage.getItem("filterColor");
-//let filter = lastFilter === "rgba(255, 0, 0, 0.75)" ? "rgba(0, 200, 255, 0.8)" : "rgba(255, 0, 0, 0.75)";
-//localStorage.setItem("filterColor", filter);
-
-// function updateLinkColor() {
-   //  const link = document.querySelector("a"); 
-   //  if (!link) return; 
-
-   //  const isRedFilter = filter === "rgba(255, 0, 0, 0.75)";
-   //  link.style.color = isRedFilter ? "rgb(0, 200, 255)" : "rgb(255, 0, 0)";
-
-   //  link.addEventListener("mousedown", () => {
-   //      link.style.color = isRedFilter ? "rgb(255, 0, 0)" : "rgb(0, 200, 255)";
-   //  });
-
-   //  link.addEventListener("mouseup", () => {
-   //      link.style.color = isRedFilter ? "rgb(0, 200, 255)" : "rgb(255, 0, 0)";
-   //  });
-// }
+resizeCanvas();
 
 async function startCamera() {
     try {
         const constraints = {
             video: {
-                facingMode: { ideal: "environment" }, 
+                facingMode: { ideal: "environment" },
                 width: { ideal: 1280 },
                 height: { ideal: 720 }
             }
@@ -50,21 +30,20 @@ async function startCamera() {
 }
 
 function draw() {
-    if (video.readyState >= 2) { 
-        // Top half: red filter
-context.fillStyle = "rgba(255, 0, 0, 0.75)";
-context.fillRect(0, 0, canvas.width, canvas.height / 2);
+    if (video.readyState >= 2) {
+        // Apply red filter to the top half
+        context.fillStyle = "rgba(255, 0, 0, 0.75)";
+        context.fillRect(0, 0, canvas.width, canvas.height / 2);
 
-// Bottom half: blue filter
-context.fillStyle = "rgba(0, 200, 255, 0.8)";
-context.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+        // Apply blue filter to the bottom half
+        context.fillStyle = "rgba(0, 200, 255, 0.8)";
+        context.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
 
         const canvasRatio = canvas.width / canvas.height;
         const videoRatio = video.videoWidth / video.videoHeight;
 
         let drawWidth, drawHeight, offsetX, offsetY;
 
-       
         if (videoRatio > canvasRatio) {
             drawHeight = canvas.height;
             drawWidth = video.videoWidth * (canvas.height / video.videoHeight);
@@ -77,16 +56,14 @@ context.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
             offsetY = (canvas.height - drawHeight) / 2;
         }
 
+        // Draw the video to the canvas
         context.drawImage(video, offsetX, offsetY, drawWidth, drawHeight);
-        context.fillStyle = filter;
-        context.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     requestAnimationFrame(draw);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    updateLinkColor();
     startCamera();
 });
 

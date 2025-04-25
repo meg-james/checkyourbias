@@ -53,10 +53,10 @@ function draw() {
 
         context.drawImage(video, offsetX, offsetY, drawWidth, drawHeight);
 
-        context.fillStyle = "rgba(255, 0, 0, 0.9)";
+        context.fillStyle = "rgba(255, 0, 0, 0.85)";
         context.fillRect(0, 0, canvas.width, canvas.height / 2);
 
-        context.fillStyle = "rgba(0, 200, 255, 0.9)";
+        context.fillStyle = "rgba(0, 200, 255, 0.85)";
         context.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
     }
 

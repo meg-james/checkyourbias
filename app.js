@@ -56,7 +56,7 @@ function draw() {
         context.fillStyle = "rgba(255, 0, 0, 0.8)";
         context.fillRect(0, 0, canvas.width, canvas.height / 2);
 
-        context.fillStyle = "rgba(0, 200, 255, 0.8)";
+        context.fillStyle = "rgba(0, 190, 255, 0.8)";
         context.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
     }
 

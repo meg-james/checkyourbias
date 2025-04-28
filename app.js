@@ -71,9 +71,5 @@ video.addEventListener("play", draw);
 
 document.addEventListener("DOMContentLoaded", () => {
     startCamera();
-
-    const eye = document.getElementById("eye");
-    eye.addEventListener("click", () => {
-        window.open("https://meg-james-design.com", "_blank");
     });
 });

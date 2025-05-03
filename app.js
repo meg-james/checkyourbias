@@ -22,7 +22,7 @@ async function startCamera() {
 
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         video.srcObject = stream;
-        video.setAttribute("playsinline", true); 
+        video.setAttribute("playsinline", true);
         video.play();
     } catch (error) {
         console.error("Error accessing the camera: ", error);
@@ -67,9 +67,4 @@ document.addEventListener("DOMContentLoaded", () => {
     startCamera();
 });
 
-video.addEventListener("play", draw);
-
-document.addEventListener("DOMContentLoaded", () => {
-    startCamera();
-    });
-});
+video.addEventListener("loadedmetadata", draw);
